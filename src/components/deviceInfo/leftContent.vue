@@ -290,9 +290,7 @@ interface Idata {
 const data: Idata = reactive({
   deviceInfos: $store.getters["Common/getDeviceInfos"],
   imgUrl: process.env.VUE_APP_IMGURL,
-  deviceImgUrl:
-    // "http://182.140.146.132:7979/upload/4856b31519924c7ebb8ee87a177f0831/PressureGauge.png",
-    "http://182.140.146.131:7777/upload/4856b31519924c7ebb8ee87a177f0831/PressureGauge.png",
+  deviceImgUrl: '',
   checkLists: ["基本信息", "运行状态", "数据图表"],
   checkType: 0,
   baseSamplingList: [],
@@ -394,7 +392,10 @@ const onSetAttrs = () => {
 
 const initData = () => {
   console.log("data.deviceInfos>>", data.deviceInfos.device_type_pic);
-  if (data.deviceInfos.device_type_pic) {
+    if (data.deviceInfos && data.deviceInfos.id) {
+    console.log('data.deviceInfos',data.deviceInfos);
+    data.deviceImgUrl = `/public/picture/${data.deviceInfos.id}.png`;
+  } else if (data.deviceInfos.device_type_pic) {
     data.deviceImgUrl =
       process.env.VUE_APP_IMGURL + data.deviceInfos.device_type_pic;
   }
@@ -768,6 +769,12 @@ const searchDiv_btn = function (): boolean {
     align-items: center;
     justify-content: center;
     user-select: none;
+
+    img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;  /* 保持比例居中显示 */
+    }
   }
   .checkHeader {
     display: flex;
