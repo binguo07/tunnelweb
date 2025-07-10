@@ -42,6 +42,93 @@
           <div class="brand-logo">
             <img src="@/assets/image/public/brand_logo.png" alt="Brand Logo" />
           </div>
+          <div class="cesium-offset-controls">
+            <div class="control-header">
+              <span>Cesium 偏移调整</span>
+              <button class="toggle-btn" @click="showOffsetControls = !showOffsetControls">
+                {{ showOffsetControls ? '−' : '+' }}
+              </button>
+            </div>
+            <div v-show="showOffsetControls" class="control-panel">
+              <div class="control-group">
+                <label>3D地形高度偏移:</label>
+                <input
+                  type="number"
+                  step="0.1"
+                  v-model.number="offsetControls.tilesetAltitude"
+                  @input="updateTilesetOffset"
+                />
+              </div>
+              <div class="control-group">
+                <label>设备经度偏移:</label>
+                <input
+                  type="number"
+                  step="0.00001"
+                  v-model.number="offsetControls.deviceLongitude"
+                  @input="updateDeviceOffsets"
+                />
+              </div>
+              <div class="control-group">
+                <label>设备纬度偏移:</label>
+                <input
+                  type="number"
+                  step="0.00001"
+                  v-model.number="offsetControls.deviceLatitude"
+                  @input="updateDeviceOffsets"
+                />
+              </div>
+              <div class="control-group">
+                <label>设备高度偏移:</label>
+                <input
+                  type="number"
+                  step="1"
+                  v-model.number="offsetControls.deviceAltitude"
+                  @input="updateDeviceOffsets"
+                />
+              </div>
+              <div class="control-actions">
+                <button class="reset-btn" @click="resetOffsets">重置</button>
+                <button class="apply-btn" @click="applyOffsets">应用</button>
+              </div>
+            </div>
+          </div>
+          <div class="cesium-device-offset-controls">
+            <div class="control-header">
+              <span>设备偏移调整</span>
+              <button class="toggle-btn" @click="showDeviceOffsetControls = !showDeviceOffsetControls">
+                {{ showDeviceOffsetControls ? '−' : '+' }}
+              </button>
+            </div>
+            <div v-show="showDeviceOffsetControls" class="control-panel">
+              <div class="control-group">
+                <label>选择设备:</label>
+                <select v-model="selectedDeviceId">
+                  <option :value="null">请选择</option>
+                  <option v-for="dev in equipmentList" :key="dev.id" :value="dev.id">
+                    {{ dev.device_name || dev.title }}
+                  </option>
+                </select>
+              </div>
+              <template v-if="selectedDeviceId">
+                <div class="control-group">
+                  <label>经度偏移:</label>
+                  <input type="number" step="0.00001" v-model.number="deviceOffsetInputs.lon" />
+                </div>
+                <div class="control-group">
+                  <label>纬度偏移:</label>
+                  <input type="number" step="0.00001" v-model.number="deviceOffsetInputs.lat" />
+                </div>
+                <div class="control-group">
+                  <label>高度偏移:</label>
+                  <input type="number" step="1" v-model.number="deviceOffsetInputs.alt" />
+                </div>
+                <div class="control-actions">
+                  <button class="reset-btn" @click="resetDeviceOffset">重置</button>
+                  <button class="apply-btn" @click="applyDeviceOffset">应用</button>
+                </div>
+              </template>
+            </div>
+          </div>
           <div id="cesium-info-container">
             <div
                 class="cesium-entity-tooltip"
@@ -310,6 +397,7 @@ import {
   ref,
   Ref,
   onDeactivated,
+  watch,
 } from "vue";
 import {
   queryDeviceTitle,
@@ -509,6 +597,39 @@ const hoveredPosition = ref({ x: 0, y: 0 });
 const manualAlarmDialogVisible = ref(false);
 const confirmPassword = ref("");
 
+// Whether to display offset adjustment panel
+const showOffsetControls = ref(false);
+// Cesium and device offset values
+const CESIUM_OFFSETS = {
+  TILESET_ALTITUDE_OFFSET: -200.0,
+  DEVICE_LONGITUDE_OFFSET: 0.0,
+  DEVICE_LATITUDE_OFFSET: 0.0,
+  DEVICE_ALTITUDE_OFFSET: 353,
+};
+const offsetControls = ref({
+  tilesetAltitude: CESIUM_OFFSETS.TILESET_ALTITUDE_OFFSET,
+  deviceLongitude: CESIUM_OFFSETS.DEVICE_LONGITUDE_OFFSET,
+  deviceLatitude: CESIUM_OFFSETS.DEVICE_LATITUDE_OFFSET,
+  deviceAltitude: CESIUM_OFFSETS.DEVICE_ALTITUDE_OFFSET,
+});
+const originalOffsets = { ...offsetControls.value };
+
+// Device specific offset state
+const showDeviceOffsetControls = ref(false);
+const selectedDeviceId = ref(null);
+const deviceOffsetInputs = ref({ lon: 0, lat: 0, alt: 0 });
+const deviceOffsets = ref<Record<string, { lon: number; lat: number; alt: number }>>({});
+
+const tilesetRef = ref(null);
+
+watch(selectedDeviceId, (id) => {
+  if (id && deviceOffsets.value[id]) {
+    deviceOffsetInputs.value = { ...deviceOffsets.value[id] };
+  } else {
+    deviceOffsetInputs.value = { lon: 0, lat: 0, alt: 0 };
+  }
+});
+
 onMounted(() => {
   innitCameraData();
   initCesium();
@@ -687,11 +808,16 @@ const initCesium = async () => {
     // 3d tiles 地形下降到海拔0
     const cartographic = Cesium.Cartographic.fromCartesian(tileset.boundingSphere.center);
     const surface = Cesium.Cartesian3.fromRadians(cartographic.longitude, cartographic.latitude, 0.0);
-    const offset = Cesium.Cartesian3.fromRadians(cartographic.longitude, cartographic.latitude, -1075.0);
+    const offset = Cesium.Cartesian3.fromRadians(
+      cartographic.longitude,
+      cartographic.latitude,
+      CESIUM_OFFSETS.TILESET_ALTITUDE_OFFSET
+    );
     const translation = Cesium.Cartesian3.subtract(offset, surface, new Cesium.Cartesian3());
     tileset.modelMatrix = Cesium.Matrix4.fromTranslation(translation);
     //
     viewer.scene.primitives.add(tileset);
+    tilesetRef.value = tileset;
     const boundingRectangle = Cesium.Rectangle.fromBoundingSphere(tileset.boundingSphere);
     const goHome = () => {
       const lonDegrees = 105.53755104858234;
@@ -746,7 +872,11 @@ const renderDeviceLocations = (device_clazz_fk = -1) => {
 
     const entity = viewer.entities.add({
       name: device.title,
-      position: Cesium.Cartesian3.fromDegrees(device.lon, device.lat - 0.00001, device.alt - 353),
+      position: Cesium.Cartesian3.fromDegrees(
+        device.lon + CESIUM_OFFSETS.DEVICE_LONGITUDE_OFFSET + (deviceOffsets.value[device.id]?.lon || 0),
+        device.lat - CESIUM_OFFSETS.DEVICE_LATITUDE_OFFSET + (deviceOffsets.value[device.id]?.lat || 0),
+        device.alt - CESIUM_OFFSETS.DEVICE_ALTITUDE_OFFSET + (deviceOffsets.value[device.id]?.alt || 0)
+      ),
       billboard: {
         image: statusImageUrl,
         width: 52 * .6,
@@ -774,7 +904,11 @@ const renderDeviceLocations = (device_clazz_fk = -1) => {
 
     viewer.entities.add({
       name: `${device.title}-logo`,
-      position: Cesium.Cartesian3.fromDegrees(device.lon, device.lat - 0.00001, device.alt - 353),
+      position: Cesium.Cartesian3.fromDegrees(
+        device.lon + CESIUM_OFFSETS.DEVICE_LONGITUDE_OFFSET + (deviceOffsets.value[device.id]?.lon || 0),
+        device.lat - CESIUM_OFFSETS.DEVICE_LATITUDE_OFFSET + (deviceOffsets.value[device.id]?.lat || 0),
+        device.alt - CESIUM_OFFSETS.DEVICE_ALTITUDE_OFFSET + (deviceOffsets.value[device.id]?.alt || 0)
+      ),
       billboard: {
         image: require("@/assets/image/index/sensor.png"),
         width: 20,
@@ -893,6 +1027,11 @@ const GetAueryDeviceTitleFn = () => {
     }
 
     deviceLocations.value = locations;
+    locations.forEach(dev => {
+      if (!deviceOffsets.value[dev.id]) {
+        deviceOffsets.value[dev.id] = { lon: 0, lat: 0, alt: 0 };
+      }
+    });
 
     let allData = {
       device_clazz_fk: -1,
@@ -1143,7 +1282,62 @@ const submitManualAlarm = () => {
   callManualAlarm({
     alarmType: 'red',
   });
-}
+};
+
+// ========== Offset adjustment helpers ==========
+const updateTilesetOffset = () => {
+  CESIUM_OFFSETS.TILESET_ALTITUDE_OFFSET = offsetControls.value.tilesetAltitude;
+  if (viewerRef.value && tilesetRef.value) {
+    const Cesium = window.Cesium;
+    const tileset = tilesetRef.value;
+    const cartographic = Cesium.Cartographic.fromCartesian(tileset.boundingSphere.center);
+    const surface = Cesium.Cartesian3.fromRadians(cartographic.longitude, cartographic.latitude, 0.0);
+    const offset = Cesium.Cartesian3.fromRadians(
+      cartographic.longitude,
+      cartographic.latitude,
+      CESIUM_OFFSETS.TILESET_ALTITUDE_OFFSET
+    );
+    const translation = Cesium.Cartesian3.subtract(offset, surface, new Cesium.Cartesian3());
+    tileset.modelMatrix = Cesium.Matrix4.fromTranslation(translation);
+  }
+};
+
+const updateDeviceOffsets = () => {
+  CESIUM_OFFSETS.DEVICE_LONGITUDE_OFFSET = offsetControls.value.deviceLongitude;
+  CESIUM_OFFSETS.DEVICE_LATITUDE_OFFSET = offsetControls.value.deviceLatitude;
+  CESIUM_OFFSETS.DEVICE_ALTITUDE_OFFSET = offsetControls.value.deviceAltitude;
+  if (viewerRef.value && deviceLocations.value.length > 0) {
+    renderDeviceLocations();
+  }
+};
+
+const resetOffsets = () => {
+  offsetControls.value.tilesetAltitude = originalOffsets.tilesetAltitude;
+  offsetControls.value.deviceLongitude = originalOffsets.deviceLongitude;
+  offsetControls.value.deviceLatitude = originalOffsets.deviceLatitude;
+  offsetControls.value.deviceAltitude = originalOffsets.deviceAltitude;
+  applyOffsets();
+};
+
+const applyOffsets = () => {
+  updateTilesetOffset();
+  updateDeviceOffsets();
+};
+
+const applyDeviceOffset = () => {
+  if (selectedDeviceId.value) {
+    deviceOffsets.value[selectedDeviceId.value] = { ...deviceOffsetInputs.value };
+    renderDeviceLocations();
+  }
+};
+
+const resetDeviceOffset = () => {
+  if (selectedDeviceId.value) {
+    deviceOffsets.value[selectedDeviceId.value] = { lon: 0, lat: 0, alt: 0 };
+    deviceOffsetInputs.value = { lon: 0, lat: 0, alt: 0 };
+    renderDeviceLocations();
+  }
+};
 </script>
 
 <style scoped lang="less">
@@ -1518,6 +1712,215 @@ const submitManualAlarm = () => {
       width: 180px;
       height: auto;
       filter: grayscale(0.6) opacity(0.7);
+    }
+  }
+
+  .cesium-offset-controls {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 1001;
+    background-color: rgba(3, 34, 84, 0.9);
+    border: 1px solid #00468f;
+    border-radius: 4px;
+    box-shadow: 0px 0px 14px #0e4badbd;
+    min-width: 280px;
+
+    .control-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 15px;
+      border-bottom: 1px solid #00468f;
+      color: white;
+      font-size: 14px;
+      font-weight: bold;
+
+      .toggle-btn {
+        background: rgba(0, 149, 255, 0.7);
+        border: none;
+        color: white;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        cursor: pointer;
+        font-size: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        &:hover {
+          background: rgba(0, 149, 255, 1);
+        }
+      }
+    }
+
+    .control-panel {
+      padding: 15px;
+
+      .control-group {
+        margin-bottom: 12px;
+
+        label {
+          display: block;
+          color: #77c4ff;
+          font-size: 12px;
+          margin-bottom: 4px;
+        }
+
+        input {
+          width: 100%;
+          padding: 6px 8px;
+          background: rgba(0, 0, 0, 0.3);
+          border: 1px solid #00468f;
+          border-radius: 3px;
+          color: white;
+          font-size: 12px;
+
+          &:focus {
+            outline: none;
+            border-color: rgba(0, 149, 255, 0.8);
+            box-shadow: 0 0 5px rgba(0, 149, 255, 0.3);
+          }
+        }
+      }
+
+      .control-actions {
+        display: flex;
+        gap: 8px;
+        margin-top: 15px;
+
+        button {
+          flex: 1;
+          padding: 6px 12px;
+          border: none;
+          border-radius: 3px;
+          cursor: pointer;
+          font-size: 12px;
+          color: white;
+
+          &.reset-btn {
+            background: rgba(255, 99, 71, 0.7);
+
+            &:hover {
+              background: rgba(255, 99, 71, 1);
+            }
+          }
+
+          &.apply-btn {
+            background: rgba(0, 149, 255, 0.7);
+
+            &:hover {
+              background: rgba(0, 149, 255, 1);
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .cesium-device-offset-controls {
+    position: absolute;
+    top: 10px;
+    right: 310px;
+    z-index: 1001;
+    background-color: rgba(3, 34, 84, 0.9);
+    border: 1px solid #00468f;
+    border-radius: 4px;
+    box-shadow: 0px 0px 14px #0e4badbd;
+    min-width: 280px;
+
+    .control-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 15px;
+      border-bottom: 1px solid #00468f;
+      color: white;
+      font-size: 14px;
+      font-weight: bold;
+
+      .toggle-btn {
+        background: rgba(0, 149, 255, 0.7);
+        border: none;
+        color: white;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        cursor: pointer;
+        font-size: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        &:hover {
+          background: rgba(0, 149, 255, 1);
+        }
+      }
+    }
+
+    .control-panel {
+      padding: 15px;
+
+      .control-group {
+        margin-bottom: 12px;
+
+        label {
+          display: block;
+          color: #77c4ff;
+          font-size: 12px;
+          margin-bottom: 4px;
+        }
+
+        input,
+        select {
+          width: 100%;
+          padding: 6px 8px;
+          background: rgba(0, 0, 0, 0.3);
+          border: 1px solid #00468f;
+          border-radius: 3px;
+          color: white;
+          font-size: 12px;
+
+          &:focus {
+            outline: none;
+            border-color: rgba(0, 149, 255, 0.8);
+            box-shadow: 0 0 5px rgba(0, 149, 255, 0.3);
+          }
+        }
+      }
+
+      .control-actions {
+        display: flex;
+        gap: 8px;
+        margin-top: 15px;
+
+        button {
+          flex: 1;
+          padding: 6px 12px;
+          border: none;
+          border-radius: 3px;
+          cursor: pointer;
+          font-size: 12px;
+          color: white;
+
+          &.reset-btn {
+            background: rgba(255, 99, 71, 0.7);
+
+            &:hover {
+              background: rgba(255, 99, 71, 1);
+            }
+          }
+
+          &.apply-btn {
+            background: rgba(0, 149, 255, 0.7);
+
+            &:hover {
+              background: rgba(0, 149, 255, 1);
+            }
+          }
+        }
+      }
     }
   }
 
