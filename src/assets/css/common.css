@@ -1,0 +1,18 @@
+@font-face {
+  font-family: 'msyh';
+  src: url('../fonts/msyh.ttf');
+}
+
+@font-face {
+  font-family: 'msyhbd';
+  src: url('../fonts/msyhbd.ttf');
+}
+
+@font-face {
+  font-family: 'msyhl';
+  src: url('../fonts/msyhl.ttc');
+}
+@font-face {
+  font-family: 'pangmen';
+  src: url("../fonts/庞门正道标题体2.0增强版.ttf");
+}

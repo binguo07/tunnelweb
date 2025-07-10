@@ -1,0 +1,53 @@
+<!--
+ * @Description: file content
+ * @version: 0.1.0
+ * @Author: wys
+ * @Date: 2022-07-04 12:42:02
+ * @LastEditors: wys
+ * @LastEditTime: 2022-08-10 11:43:01
+-->
+<!DOCTYPE html>
+<html lang="en" style="height: 100%">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%=htmlWebpackPlugin.options.title%></title>
+    <!-- <link
+      href="./mapboxModel/mapbox.css"
+      rel="stylesheet"
+    /> -->
+    <script>
+      var imageryConfig = {
+        url: 'https://bp-healthy.bimscodi.cn:8496/geoserver/gwc/service/wmts/rest/SiChuan_DOM:SiChuan_DOM_Level_13/{style}/{TileMatrixSet}/EPSG%3A900913%3A{TileMatrix}/{TileRow}/{TileCol}?TRANSPARENT=true&format=image/png',
+        layer: 'SiChuan_DOM:SiChuan_DOM_Level_13',
+        style: '',
+        format: 'image/png',
+        tileMatrixSetID: 'EPSG:900913'
+      };
+    </script>
+    <script src="./public/js/jessibuca.js"></script>
+    <!-- CesiumJS CDN Resources -->
+    <script src="./public/cesiumjs/1.117/Cesium.js"></script>
+    <link href="./public/cesiumjs/1.117/Widgets/widgets.css" rel="stylesheet">
+    <script src="./public/js/cesium_tianditu_plugin.js"></script>
+    <link rel="shortcut icon" type="image/icon" href="/favicon.png" />
+  </head>
+  <body style="height: 100%">
+    <div id="app"></div>
+  </body>
+  <!-- <script src="./mapboxModel/mapbox.js"></script> -->
+
+
+
+  <script>
+    window.requestConfig={
+      base_url:'http://192.168.32.233:8493/tunnelSpike',
+      // base_url:'http://192.168.100.122:5566'
+      // base_url:'http://192.168.2.19:8081/slope-cdn'
+      // base_url:'http://192.168.2.19:8081/slope-cdn'
+      // base_url:'http://192.168.2.19:8080/tunnelSpike'
+      //2023测试git
+    }
+  </script>
+</html>

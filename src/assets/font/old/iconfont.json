@@ -1,0 +1,303 @@
+{
+  "id": "2624672",
+  "name": "健康监测",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "23643051",
+      "name": "设置控制",
+      "font_class": "shezhikongzhi",
+      "unicode": "e6b7",
+      "unicode_decimal": 59063
+    },
+    {
+      "icon_id": "30985803",
+      "name": "箭头",
+      "font_class": "jiantou",
+      "unicode": "e71e",
+      "unicode_decimal": 59166
+    },
+    {
+      "icon_id": "30954330",
+      "name": "沉降值",
+      "font_class": "chenjiangzhi",
+      "unicode": "e716",
+      "unicode_decimal": 59158
+    },
+    {
+      "icon_id": "30954331",
+      "name": "边坡裂缝",
+      "font_class": "bianpoliefeng",
+      "unicode": "e717",
+      "unicode_decimal": 59159
+    },
+    {
+      "icon_id": "30954332",
+      "name": "水平位移",
+      "font_class": "shuipingweiyi",
+      "unicode": "e718",
+      "unicode_decimal": 59160
+    },
+    {
+      "icon_id": "30954333",
+      "name": "土壤湿度",
+      "font_class": "turangshidu",
+      "unicode": "e719",
+      "unicode_decimal": 59161
+    },
+    {
+      "icon_id": "30954334",
+      "name": "应变",
+      "font_class": "yingbian",
+      "unicode": "e71a",
+      "unicode_decimal": 59162
+    },
+    {
+      "icon_id": "30954335",
+      "name": "边坡裂缝传感器",
+      "font_class": "bianpoliefengchuanganqi",
+      "unicode": "e71b",
+      "unicode_decimal": 59163
+    },
+    {
+      "icon_id": "30954336",
+      "name": "应变计",
+      "font_class": "yingbianji",
+      "unicode": "e71c",
+      "unicode_decimal": 59164
+    },
+    {
+      "icon_id": "30954337",
+      "name": "土壤湿度传感器",
+      "font_class": "turangshiduchuanganqi",
+      "unicode": "e71d",
+      "unicode_decimal": 59165
+    },
+    {
+      "icon_id": "30927511",
+      "name": "编辑",
+      "font_class": "bianji",
+      "unicode": "e712",
+      "unicode_decimal": 59154
+    },
+    {
+      "icon_id": "30927512",
+      "name": "查看",
+      "font_class": "chakan",
+      "unicode": "e713",
+      "unicode_decimal": 59155
+    },
+    {
+      "icon_id": "30927513",
+      "name": "密码",
+      "font_class": "mima",
+      "unicode": "e714",
+      "unicode_decimal": 59156
+    },
+    {
+      "icon_id": "30927514",
+      "name": "删除",
+      "font_class": "shanchu",
+      "unicode": "e715",
+      "unicode_decimal": 59157
+    },
+    {
+      "icon_id": "30794569",
+      "name": "湿度",
+      "font_class": "shidu",
+      "unicode": "e70c",
+      "unicode_decimal": 59148
+    },
+    {
+      "icon_id": "30794570",
+      "name": "风向",
+      "font_class": "fengxiang",
+      "unicode": "e70d",
+      "unicode_decimal": 59149
+    },
+    {
+      "icon_id": "30794571",
+      "name": "风速",
+      "font_class": "fengsu",
+      "unicode": "e70e",
+      "unicode_decimal": 59150
+    },
+    {
+      "icon_id": "30794572",
+      "name": "气压",
+      "font_class": "qiya",
+      "unicode": "e70f",
+      "unicode_decimal": 59151
+    },
+    {
+      "icon_id": "30794573",
+      "name": "降雨量",
+      "font_class": "jiangyuliang",
+      "unicode": "e710",
+      "unicode_decimal": 59152
+    },
+    {
+      "icon_id": "30794574",
+      "name": "温度",
+      "font_class": "wendu",
+      "unicode": "e711",
+      "unicode_decimal": 59153
+    },
+    {
+      "icon_id": "30363001",
+      "name": "右",
+      "font_class": "you",
+      "unicode": "e6ef",
+      "unicode_decimal": 59119
+    },
+    {
+      "icon_id": "30791237",
+      "name": "运行状态",
+      "font_class": "yunhangzhuangtai",
+      "unicode": "e70a",
+      "unicode_decimal": 59146
+    },
+    {
+      "icon_id": "30791238",
+      "name": "基本信息",
+      "font_class": "jibenxinxi",
+      "unicode": "e70b",
+      "unicode_decimal": 59147
+    },
+    {
+      "icon_id": "30741162",
+      "name": "五角星",
+      "font_class": "wujiaoxing",
+      "unicode": "e709",
+      "unicode_decimal": 59145
+    },
+    {
+      "icon_id": "30683477",
+      "name": "定位",
+      "font_class": "dingwei",
+      "unicode": "e708",
+      "unicode_decimal": 59144
+    },
+    {
+      "icon_id": "23737309",
+      "name": "全屏",
+      "font_class": "quanping",
+      "unicode": "e6b3",
+      "unicode_decimal": 59059
+    },
+    {
+      "icon_id": "23737310",
+      "name": "退出全屏",
+      "font_class": "tuichuquanping",
+      "unicode": "e6b4",
+      "unicode_decimal": 59060
+    },
+    {
+      "icon_id": "30667699",
+      "name": "拱顶监测数据",
+      "font_class": "gongdingjianceshuju",
+      "unicode": "e6f9",
+      "unicode_decimal": 59129
+    },
+    {
+      "icon_id": "30667700",
+      "name": "告警消息",
+      "font_class": "gaojingxiaoxi",
+      "unicode": "e6fa",
+      "unicode_decimal": 59130
+    },
+    {
+      "icon_id": "30667701",
+      "name": "设备电量",
+      "font_class": "shebeidianliang",
+      "unicode": "e6fb",
+      "unicode_decimal": 59131
+    },
+    {
+      "icon_id": "30667702",
+      "name": "气象信息",
+      "font_class": "qixiangxinxi",
+      "unicode": "e6fc",
+      "unicode_decimal": 59132
+    },
+    {
+      "icon_id": "30667703",
+      "name": "今日数据",
+      "font_class": "jinrishuju",
+      "unicode": "e6fd",
+      "unicode_decimal": 59133
+    },
+    {
+      "icon_id": "30667704",
+      "name": "桥墩监测数据",
+      "font_class": "qiaodunjianceshuju",
+      "unicode": "e6fe",
+      "unicode_decimal": 59134
+    },
+    {
+      "icon_id": "30667705",
+      "name": "北斗设备",
+      "font_class": "beidoushebei",
+      "unicode": "e6ff",
+      "unicode_decimal": 59135
+    },
+    {
+      "icon_id": "30667706",
+      "name": "查看数据",
+      "font_class": "chakanshuju",
+      "unicode": "e700",
+      "unicode_decimal": 59136
+    },
+    {
+      "icon_id": "30667707",
+      "name": "监测点",
+      "font_class": "jiancedian",
+      "unicode": "e701",
+      "unicode_decimal": 59137
+    },
+    {
+      "icon_id": "30667708",
+      "name": "区域列表",
+      "font_class": "quyuliebiao",
+      "unicode": "e702",
+      "unicode_decimal": 59138
+    },
+    {
+      "icon_id": "30667709",
+      "name": "摄像头",
+      "font_class": "shexiangtou",
+      "unicode": "e703",
+      "unicode_decimal": 59139
+    },
+    {
+      "icon_id": "30667710",
+      "name": "微电站",
+      "font_class": "weidianzhan",
+      "unicode": "e704",
+      "unicode_decimal": 59140
+    },
+    {
+      "icon_id": "30667711",
+      "name": "微气象站",
+      "font_class": "weiqixiangzhan",
+      "unicode": "e705",
+      "unicode_decimal": 59141
+    },
+    {
+      "icon_id": "30667712",
+      "name": "MEMS",
+      "font_class": "MEMS",
+      "unicode": "e706",
+      "unicode_decimal": 59142
+    },
+    {
+      "icon_id": "30667713",
+      "name": "返回",
+      "font_class": "fanhui",
+      "unicode": "e707",
+      "unicode_decimal": 59143
+    }
+  ]
+}
