@@ -601,7 +601,7 @@ const confirmPassword = ref("");
 const showOffsetControls = ref(false);
 // Cesium and device offset values
 const CESIUM_OFFSETS = {
-  TILESET_ALTITUDE_OFFSET: -200.0,
+  TILESET_ALTITUDE_OFFSET: -1075.0,
   DEVICE_LONGITUDE_OFFSET: 0.0,
   DEVICE_LATITUDE_OFFSET: 0.0,
   DEVICE_ALTITUDE_OFFSET: 353,
