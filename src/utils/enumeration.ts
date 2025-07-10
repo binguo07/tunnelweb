@@ -26,4 +26,5 @@ export const enum DIVCIE_TYPE_FK {
   CAMERA = "Camera",//摄像机
   STRESS_INSPECT = "StressInspect",//应力监测
   PLATFORMMEMS = "PlatformMEMS",//虚拟MEMS
+  DISTANCE = "Distance",//摄像头测距
 }

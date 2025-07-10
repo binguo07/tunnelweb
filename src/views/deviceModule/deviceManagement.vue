@@ -40,7 +40,7 @@
                   <div>
                     <p  >
                       <span>{{ item.devs.length || 0 }}</span
-                      >套&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                      >套&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     </p>
                     
                     <p>{{ item.deviceTypeName }}</p>
@@ -306,6 +306,9 @@ const getDeviceImgByType = function (typeName: string): string {
       str = require("@/assets/image/deviceManagement/yingbianji.png");
       break;
     case DIVCIE_TYPE_FK.PLATFORMMEMS:
+      str = require("@/assets/image/deviceManagement/mems.png");
+      break;
+    case DIVCIE_TYPE_FK.DISTANCE:
       str = require("@/assets/image/deviceManagement/mems.png");
       break;
   }
