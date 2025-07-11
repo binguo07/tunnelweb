@@ -10,7 +10,29 @@
   <div>
     <div class="leftContent">
       <div class="baseimg_box">
-        <img :src="data.deviceImgUrl" alt="暂无图片" />
+        <el-image
+          style="width: 100%; height: 100%"
+          fit="contain"
+          :src="data.deviceImgUrl"
+          @click="showViewer = true"
+        >
+          <template #error>
+            <div class="image-slot">暂无图片</div>
+          </template>
+        </el-image>
+        <el-image-viewer
+          v-if="showViewer"
+          :url-list="[data.deviceImgUrl]"
+          :teleported="false"
+          @close="showViewer = false"
+        />
+        <el-icon
+          v-if="showViewer"
+          class="viewer-close"
+          @click="showViewer = false"
+        >
+          <Close />
+        </el-icon>
       </div>
       <div>
         <div class="checkHeader">
@@ -267,8 +289,9 @@ import {
   TimestampFn,
   TimesweekDateFn,
 } from "@/utils/tool";
-import { ElMessage } from "element-plus";
+import { ElMessage, ElIcon, ElImageViewer } from "element-plus";
 import { json } from "node:stream/consumers";
+import { Close } from "@element-plus/icons-vue";
 interface Idata {
   deviceInfos: object;
   imgUrl: string | undefined;
@@ -314,6 +337,8 @@ const data: Idata = reactive({
   deviceAttrs: [],
   bestTimeinterval: 2678400000, //查询时最大的时间跨度
 });
+
+const showViewer = ref(false);
 
 let BridgeDetectors: Ref<Element[]> = ref([]);
 let BridgeDetector = (el: Element) => {
@@ -770,10 +795,28 @@ const searchDiv_btn = function (): boolean {
     justify-content: center;
     user-select: none;
 
-    img {
-      max-width: 100%;
-      max-height: 100%;
-      object-fit: contain;  /* 保持比例居中显示 */
+    :deep(.el-image) {
+      width: 100%;
+      height: 100%;
+    }
+    .image-slot {
+      color: #fff;
+      text-align: center;
+    }
+    :deep(.el-image-viewer__actions) {
+      display: none;
+    }
+    :deep(.el-image-viewer__btn) {
+      display: none;
+    }
+    .viewer-close {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      color: #fff;
+      font-size: 24px;
+      cursor: pointer;
+      z-index: 3000;
     }
   }
   .checkHeader {
