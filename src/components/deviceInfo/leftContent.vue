@@ -10,7 +10,16 @@
   <div>
     <div class="leftContent">
       <div class="baseimg_box">
-        <img :src="data.deviceImgUrl" alt="暂无图片" />
+        <el-image
+          style="width: 100%; height: 100%"
+          fit="contain"
+          :src="data.deviceImgUrl"
+          :preview-src-list="[data.deviceImgUrl]"
+        >
+          <template #error>
+            <div class="image-slot">暂无图片</div>
+          </template>
+        </el-image>
       </div>
       <div>
         <div class="checkHeader">
@@ -770,10 +779,13 @@ const searchDiv_btn = function (): boolean {
     justify-content: center;
     user-select: none;
 
-    img {
-      max-width: 100%;
-      max-height: 100%;
-      object-fit: contain;  /* 保持比例居中显示 */
+    :deep(.el-image) {
+      width: 100%;
+      height: 100%;
+    }
+    .image-slot {
+      color: #fff;
+      text-align: center;
     }
   }
   .checkHeader {
